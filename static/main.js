@@ -13,3 +13,11 @@ downloadBtn.addEventListener("mouseout", () => {
     downloadBtn.style.backgroundColor = baseColor;
     inputBox.style.borderColor = baseColor;
 });
+
+const form = document.querySelector("form");
+const input = form.querySelector('input[name="url"]');
+
+form.addEventListener("submit", () => {
+    // Slight delay to allow submission to start
+    setTimeout(() => input.value = "", 100);
+});

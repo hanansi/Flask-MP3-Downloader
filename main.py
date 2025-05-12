@@ -1,10 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 from pytubefix import YouTube, exceptions
 from pytubefix.cli import on_progress
+from pydub import AudioSegment
 from io import BytesIO
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = b'\x1c\x8a\xbf\x88\xd07\xfa\x91\xb0\x9fU\x9c\xee\xaf\x01\x95D\xdf\xba\x83\xf7\xea\x8f7'
+app.secret_key = os.getenv("SECRET_KEY")
 
 
 def get_audio_stream(url):
@@ -18,8 +23,15 @@ def get_audio_stream(url):
         buffer.seek(0)
         return (buffer, yt_filename)
     except exceptions.RegexMatchError:
-        flash("Input a YouTube Link.")
         return (None, None)
+
+
+def convert_m4a_to_mp3(audio_buffer):
+    m4a_audio = AudioSegment.from_file(audio_buffer, format="m4a")
+    mp3_buffer = BytesIO()
+    m4a_audio.export(mp3_buffer, format="mp3")
+    mp3_buffer.seek(0)
+    return mp3_buffer
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -27,10 +39,15 @@ def index():
     if request.method == "POST":
         url = request.form.get("url")
         if url:
-           buffer, filename = get_audio_stream(url)
-        
-           if buffer:
-                return send_file(buffer, as_attachment=True, download_name=filename, mimetype="audio/mp4") 
+           m4a_buffer, filename = get_audio_stream(url)
+           mp3_buffer = convert_m4a_to_mp3(m4a_buffer)
+           mp3_filename = filename.rsplit(".", 1)[0] + ".mp3"
+
+           m4a_buffer.close()  # releases internal buffer memory
+           del m4a_buffer      # removes reference so it can be garbage collected
+           
+           if mp3_buffer:
+                return send_file(mp3_buffer, as_attachment=True, download_name=mp3_filename, mimetype="audio/mp3") 
 
         return redirect(url_for("index"))  # Redirect to avoid resubmission on refresh
 
