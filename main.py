@@ -45,7 +45,7 @@ def index():
 
            m4a_buffer.close()  # releases internal buffer memory
            del m4a_buffer      # removes reference so it can be garbage collected
-           
+
            if mp3_buffer:
                 return send_file(mp3_buffer, as_attachment=True, download_name=mp3_filename, mimetype="audio/mp3") 
 
@@ -55,5 +55,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="192.168.58.154")
+    app.run(debug=True)
     
