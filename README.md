@@ -1,0 +1,2 @@
+# Flask MP3 Downloader Web App
+A basic implementation of a YouTube audio downloader. Not a perfect web app, but it does the job. Mainly to be used for smaller files since the audio is downloaded in one instance instead of stream downloading. This project was created for personal use and to practice using Flask.
