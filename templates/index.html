@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <link rel="stylesheet" href="../static/main.css">
+    <script src="../static/main.js" defer></script>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</head>
+
+<body>
+    <main>
+        <div class="container">
+            <div class="card">
+                <h2>YouTube Audio Downloader</h2>
+                <form method="POST">
+                    <input type="text" name="url" placeholder="Paste link here....">
+                    <button type="submit">&rarr;</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
